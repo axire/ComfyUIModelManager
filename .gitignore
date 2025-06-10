@@ -1,0 +1,214 @@
+# ComfyUI Model Manager - Git Ignore File
+
+# ===== TEST FOLDERS =====
+# Exclude all test folders and their contents
+testfolders/
+test/
+testing/
+
+# ===== PYTHON ENVIRONMENT =====
+# Virtual environment
+venv/
+env/
+.venv/
+.env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ===== CONFIGURATION FILES =====
+# Configuration files may contain sensitive paths
+model_manager_config.json
+model_manager_config.json.backup
+*.config.json
+config.json
+settings.json
+
+# ===== MODEL FILES =====
+# Exclude actual model files (these are typically large)
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.safetensor
+*.model
+
+# ===== LOGS AND TEMPORARY FILES =====
+# Log files
+*.log
+logs/
+log/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+temp/
+
+# Backup files
+*.bak
+*.backup
+*~
+*.swp
+*.swo
+
+# ===== SYSTEM FILES =====
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# ===== IDE AND EDITOR FILES =====
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ===== DEVELOPMENT FILES =====
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# ===== RUNTIME AND PROCESS FILES =====
+# Process IDs
+*.pid
+
+# Flask instance folder
+instance/
+
+# Scrapy stuff
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# ===== SECURITY =====
+# API keys and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+secrets.json
+api_keys.json
+
+# ===== CUSTOM EXCLUSIONS =====
+# User-specific model repositories (these paths are local)
+# Note: Users should configure their own paths
+# /mnt/
+# /home/*/models/
+# /opt/models/
+
+# Linked model directories (symbolic links)
+models/
+linked_models/
+
+# Development testing files
+test_*.py
+*_test.py
+test_data/
+
+# Documentation build
+_build/
+
+# Node.js (if any frontend build tools are added later)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== KEEP THESE FILES =====
+# Explicitly include important files (override patterns above)
+!README.md
+!requirements.txt
+!setup.sh
+!setup.bat
+!start_model_manager.sh
+!start_model_manager.bat
+!model_manager.py
+!model_manager.html
+!assets/screenshots/
+!assets/banner*.png
+
+# Configuration template (example config)
+!model_manager_config.example.json 

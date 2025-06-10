@@ -1,0 +1,82 @@
+{
+  "repositories": [
+    {
+      "id": 1,
+      "name": "Main Models",
+      "path": "/mnt/storage/ai/models",
+      "description": "Primary model collection",
+      "created": "2025-01-01T10:00:00.000Z",
+      "exists": true
+    },
+    {
+      "id": 2,
+      "name": "Experimental Models",
+      "path": "/mnt/storage/ai/experimental",
+      "description": "Testing and experimental models",
+      "created": "2025-01-01T10:30:00.000Z",
+      "exists": true
+    }
+  ],
+  "comfyui_installations": [
+    {
+      "id": 1,
+      "name": "ComfyUI Main",
+      "path": "/home/user/ComfyUI",
+      "description": "Main ComfyUI installation",
+      "created": "2025-01-01T10:05:00.000Z",
+      "exists": true
+    },
+    {
+      "id": 2,
+      "name": "ComfyUI Testing",
+      "path": "/home/user/ComfyUI-test",
+      "description": "Testing environment",
+      "created": "2025-01-01T10:35:00.000Z",
+      "exists": true
+    }
+  ],
+  "links": {
+    "1": [1],
+    "2": [1, 2]
+  },
+  "link_status": {
+    "1": {
+      "_total_links": 6,
+      "checkpoints": "linked",
+      "loras": "linked",
+      "embeddings": "linked",
+      "controlnets": "linked",
+      "vae": "linked",
+      "upscale_models": "linked"
+    },
+    "2": {
+      "_total_links": 12,
+      "checkpoints": "linked",
+      "loras": "linked",
+      "embeddings": "linked",
+      "controlnets": "linked",
+      "vae": "linked",
+      "upscale_models": "linked"
+    }
+  },
+  "folder_snapshots": {
+    "1": {
+      "checkpoints": 15,
+      "loras": 42,
+      "embeddings": 8,
+      "controlnets": 6,
+      "vae": 3,
+      "upscale_models": 4,
+      "last_updated": "2025-01-01T12:00:00.000Z"
+    },
+    "2": {
+      "checkpoints": 5,
+      "loras": 12,
+      "embeddings": 2,
+      "controlnets": 1,
+      "vae": 1,
+      "upscale_models": 1,
+      "last_updated": "2025-01-01T12:00:00.000Z"
+    }
+  }
+} 
