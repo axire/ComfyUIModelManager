@@ -725,7 +725,7 @@ class ModelManagerHandler(SimpleHTTPRequestHandler):
                     })
                 
                 try:
-                    # List only directories for filesystem browsing
+                    # List both directories and files for filesystem browsing
                     for item_name in sorted(os.listdir(current_browse_abs_path)):
                         item_abs_path = os.path.join(current_browse_abs_path, item_name)
                         
@@ -743,6 +743,29 @@ class ModelManagerHandler(SimpleHTTPRequestHandler):
                                 "type": "directory",
                                 "path": item_abs_path
                             })
+                        elif os.path.isfile(item_abs_path):
+                            # Add file processing for filesystem mode
+                            stat = os.stat(item_abs_path)
+                            file_info = {
+                                "name": item_name,
+                                "type": "file",
+                                "size_mb": round(stat.st_size / (1024 * 1024), 2),
+                                "modified": datetime.datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                                "path": item_abs_path
+                            }
+                            if item_name.lower().endswith('.safetensors'):
+                                if SAFETENSORS_AVAILABLE:
+                                    header_meta, tensor_keys = self._get_safetensor_details(item_abs_path)
+                                    file_info["header_metadata"] = header_meta
+                                    file_info["tensor_keys"] = tensor_keys
+                                    # Use enhanced classification
+                                    file_info["model_type"] = classify_safetensor(item_name, header_meta, tensor_keys)
+                                else:
+                                    # Fallback classification without metadata
+                                    file_info["model_type"] = classify_safetensor(item_name)
+                            elif item_name.lower().endswith(('.ckpt', '.pt', '.bin', '.pth')):
+                                file_info["model_type"] = "PyTorch Model/Ckpt"
+                            browse_results.append(file_info)
                 
                 except PermissionError:
                     self.send_error(403, "Permission denied")
