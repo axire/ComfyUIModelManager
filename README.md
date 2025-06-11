@@ -8,7 +8,7 @@ There are folders that holds the models, i.e. **models repos**.
 There are folders that holds ComfyUI installation, i.e. **ComfyUI Installs**.
 This model manager can link them in any combination. Run this tool to do the config. No need to keep it running. The models will still be available. :)
 
-## Safetensot inspector
+## Safetensor inspector
 Need help understanding the .safetensor files?
 All those downloaded .safesonsor files. Do you need help sorting them? Is it a SD1.5 checkpoint? Or was it a FLUX LORA? Maybe it was a contolnet!
 Use the **safeTensor inspector**.
