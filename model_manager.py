@@ -831,12 +831,28 @@ class ModelManagerHandler(SimpleHTTPRequestHandler):
                 self.send_error(400, "Missing 'path' parameter")
                 return
 
-            file_abs_path = os.path.normpath(os.path.join(self.inspector_root, requested_file_param))
+            # Handle both absolute paths (filesystem mode) and relative paths (inspector mode)
+            if requested_file_param.startswith('/'):
+                # Absolute path - use directly (filesystem mode)
+                file_abs_path = os.path.normpath(requested_file_param)
+                
+                # Apply same security restrictions as filesystem browsing
+                restricted_paths = ['/proc', '/sys', '/dev', '/run', '/tmp/systemd-private']
+                if any(file_abs_path.startswith(path) for path in restricted_paths):
+                    self.send_error(403, "Access to system files is restricted")
+                    return
+                    
+                if not os.path.isfile(file_abs_path):
+                    self.send_error(404, "File not found")
+                    return
+            else:
+                # Relative path - use inspector_root (inspector mode)
+                file_abs_path = os.path.normpath(os.path.join(self.inspector_root, requested_file_param))
 
-            if not os.path.realpath(file_abs_path).startswith(os.path.realpath(self.inspector_root)) or \
-               not os.path.isfile(file_abs_path):
-                self.send_error(403, "Forbidden or invalid file path")
-                return
+                if not os.path.realpath(file_abs_path).startswith(os.path.realpath(self.inspector_root)) or \
+                   not os.path.isfile(file_abs_path):
+                    self.send_error(403, "Forbidden or invalid file path")
+                    return
 
             if not file_abs_path.lower().endswith('.safetensors'):
                 self.send_error(400, "File is not a .safetensors file or safetensors library unavailable.")

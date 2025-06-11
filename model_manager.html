@@ -1826,14 +1826,22 @@ ComfyUI2: /user/ComfyUI2/models/model.safetensors → <span style="color: #4caf5
             activeAnalyses++;
             updateLoadingIndicator();
 
-            fetch(`/api/browse?path=${encodeURIComponent(path)}`)
+            // Use filesystem mode for absolute paths, inspector mode for relative paths
+            const isAbsolutePath = path && path.startsWith('/');
+            const apiUrl = isAbsolutePath ? 
+                `/api/browse?mode=filesystem&path=${encodeURIComponent(path)}` :
+                `/api/browse?path=${encodeURIComponent(path)}`;
+
+            fetch(apiUrl)
                 .then(res => {
                     if (!res.ok) return res.text().then(text => { throw new Error(`Server error: ${res.status} ${text || res.statusText}`) });
                     return res.json();
                 })
                 .then(data => {
                     tableBody.innerHTML = '';
-                    data.forEach(item => {
+                    // Handle different response formats: filesystem mode returns {current_path, items}, inspector mode returns array
+                    const items = Array.isArray(data) ? data : (data.items || []);
+                    items.forEach(item => {
                         const tr = document.createElement("tr");
                         tr.dataset.filePath = item.path;
                         tr.dataset.fileName = item.name;
