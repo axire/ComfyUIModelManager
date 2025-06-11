@@ -527,7 +527,7 @@
             border-radius: 8px;
             width: 80%;
             max-width: 800px;
-            max-height: 80%;
+            max-height: 90%;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -555,10 +555,10 @@
         .path-browser-list {
             flex: 1;
             overflow-y: auto;
-            max-height: 400px;
             border: 1px solid #4a4a4a;
             border-radius: 4px;
             background: #1a1a1a;
+            min-height: 0;
         }
         
         .path-browser-item {
@@ -1450,6 +1450,19 @@ ComfyUI2: /user/ComfyUI2/models/model.safetensors → <span style="color: #4caf5
                     <button onclick="browseToParent()" class="browse-btn">.. (Parent)</button>
                     <button onclick="browseToHome()" class="browse-btn">Home</button>
                     <button onclick="browseToRoot()" class="browse-btn">Root</button>
+                </div>
+            </div>
+            
+            <!-- Quick Access Shortcuts for Path Browser -->
+            <div id="browserShortcuts" class="quick-access-container" style="margin: 15px 0;">
+                <h3 style="margin: 0 0 15px 0; color: #569cd6; font-size: 16px;">Quick Access</h3>
+                <div class="quick-access-section">
+                    <span class="quick-access-label">Resources:</span>
+                    <div id="browserResourceShortcuts" class="quick-access-grid"></div>
+                </div>
+                <div class="quick-access-section">
+                    <span class="quick-access-label">Installations:</span>
+                    <div id="browserInstallationShortcuts" class="quick-access-grid"></div>
                 </div>
             </div>
             
@@ -2599,14 +2612,17 @@ ComfyUI2: /user/ComfyUI2/models/model.safetensors → <span style="color: #4caf5
             const modal = document.getElementById('pathBrowserModal');
             modal.style.display = 'flex';
             
+            // Update Quick Access shortcuts
+            await updateBrowserShortcuts();
+            
             // Start browsing from home directory if no input ID (for inspector)
             if (!inputId) {
-                await loadBrowserPath('');
+                await loadBrowserPath('HOME');
             } else {
-                // Start from current input value or home
+                // Start from current input value or home directory
                 const input = document.getElementById(inputId);
                 const currentPath = input ? input.value : '';
-                await loadBrowserPath(currentPath || '');
+                await loadBrowserPath(currentPath || 'HOME');
             }
         }
 
@@ -2628,20 +2644,33 @@ ComfyUI2: /user/ComfyUI2/models/model.safetensors → <span style="color: #4caf5
                 
                 if (data.error) {
                     pathList.innerHTML = `<div style="padding: 20px; text-align: center; color: #f44336;">Error: ${data.error}</div>`;
+                    // Set a fallback path if there's an error
+                    currentBrowserPath = path || '/';
+                    pathDisplay.textContent = currentBrowserPath;
                     return;
                 }
                 
-                currentBrowserPath = data.current_path;
+                currentBrowserPath = data.current_path || path || '/';
                 pathDisplay.textContent = currentBrowserPath;
                 
-                renderBrowserItems(data.items);
+                renderBrowserItems(data.items || []);
             } catch (error) {
+                console.error('Failed to load directory:', error);
                 pathList.innerHTML = `<div style="padding: 20px; text-align: center; color: #f44336;">Failed to load directory</div>`;
+                // Set a fallback path if fetch fails
+                currentBrowserPath = path || '/';
+                pathDisplay.textContent = currentBrowserPath;
             }
         }
 
         function renderBrowserItems(items) {
             const pathList = document.getElementById('pathBrowserList');
+            
+            // Check if items is valid
+            if (!items || !Array.isArray(items)) {
+                pathList.innerHTML = '<div style="padding: 20px; text-align: center; color: #888;">No items to display</div>';
+                return;
+            }
             
             if (items.length === 0) {
                 pathList.innerHTML = '<div style="padding: 20px; text-align: center; color: #888;">This directory is empty</div>';
@@ -2649,12 +2678,15 @@ ComfyUI2: /user/ComfyUI2/models/model.safetensors → <span style="color: #4caf5
             }
             
             const html = items.map(item => {
-                const icon = item.is_directory ? '📁' : '📄';
-                const className = item.is_directory ? 'directory' : 'file';
+                const isDirectory = item.type === 'directory';
+                const icon = isDirectory ? '📁' : '📄';
+                const className = isDirectory ? 'directory' : 'file';
+                const itemPath = item.path || '';
+                const itemName = item.name || 'Unknown';
                 return `
-                    <div class="path-browser-item ${className}" onclick="navigateToBrowserPath('${item.path}', ${item.is_directory})">
+                    <div class="path-browser-item ${className}" onclick="navigateToBrowserPath('${itemPath}', ${isDirectory})">
                         <span class="path-browser-icon">${icon}</span>
-                        <span>${item.name}</span>
+                        <span>${itemName}</span>
                     </div>
                 `;
             }).join('');
@@ -2663,23 +2695,39 @@ ComfyUI2: /user/ComfyUI2/models/model.safetensors → <span style="color: #4caf5
         }
 
         async function navigateToBrowserPath(path, isDirectory) {
+            console.log('Navigate to:', path, 'isDirectory:', isDirectory);
             if (isDirectory) {
                 await loadBrowserPath(path);
             }
         }
 
         async function browseToParent() {
+            console.log('Navigate to Parent, currentBrowserPath:', currentBrowserPath);
+            // Ensure currentBrowserPath is a valid string
+            if (!currentBrowserPath || typeof currentBrowserPath !== 'string') {
+                console.warn('currentBrowserPath is not set, initializing to home');
+                await loadBrowserPath('');
+                return;
+            }
+            
             if (currentBrowserPath !== '/') {
-                const parentPath = currentBrowserPath.split('/').slice(0, -1).join('/') || '/';
+                const pathParts = currentBrowserPath.split('/');
+                const parentPath = pathParts.slice(0, -1).join('/') || '/';
+                console.log('Parent path calculated:', parentPath);
                 await loadBrowserPath(parentPath);
+            } else {
+                console.log('Already at root, cannot go to parent');
             }
         }
 
         async function browseToHome() {
-            await loadBrowserPath('');
+            console.log('Navigate to Home');
+            // Use special 'HOME' keyword that backend will resolve
+            await loadBrowserPath('HOME');
         }
 
         async function browseToRoot() {
+            console.log('Navigate to Root');
             await loadBrowserPath('/');
         }
 
@@ -2695,6 +2743,47 @@ ComfyUI2: /user/ComfyUI2/models/model.safetensors → <span style="color: #4caf5
                 fetchAndRenderDirectory(currentBrowserPath);
             }
             closePathBrowser();
+        }
+
+        // Update Quick Access shortcuts for path browser
+        async function updateBrowserShortcuts() {
+            try {
+                // Fetch repositories and installations
+                const [reposResponse, installsResponse] = await Promise.all([
+                    fetch('/api/repositories'),
+                    fetch('/api/installations')
+                ]);
+                
+                const repositories = await reposResponse.json();
+                const installations = await installsResponse.json();
+                
+                // Create resource shortcuts
+                const resourceShortcuts = document.getElementById('browserResourceShortcuts');
+                resourceShortcuts.innerHTML = '';
+                
+                repositories.forEach((repo, index) => {
+                    const box = document.createElement('button');
+                    box.textContent = repo.name || `Repo ${repo.id}`;
+                    box.className = 'quick-access-box repository';
+                    box.onclick = () => loadBrowserPath(repo.path);
+                    resourceShortcuts.appendChild(box);
+                });
+                
+                // Create installation shortcuts
+                const installationShortcuts = document.getElementById('browserInstallationShortcuts');
+                installationShortcuts.innerHTML = '';
+                
+                installations.forEach((install, index) => {
+                    const box = document.createElement('button');
+                    box.textContent = install.name || `Install ${install.id}`;
+                    box.className = 'quick-access-box installation';
+                    box.onclick = () => loadBrowserPath(install.path + '/models');
+                    installationShortcuts.appendChild(box);
+                });
+                
+            } catch (error) {
+                console.error('Error updating browser shortcuts:', error);
+            }
         }
     </script>
 </body>

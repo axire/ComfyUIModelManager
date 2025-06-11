@@ -691,6 +691,9 @@ class ModelManagerHandler(SimpleHTTPRequestHandler):
                 if requested_path_param == '':
                     # Start from root if no path specified
                     current_browse_abs_path = '/'
+                elif requested_path_param == 'HOME':
+                    # Special keyword for user home directory
+                    current_browse_abs_path = os.path.expanduser('~')
                 else:
                     # Handle absolute paths for filesystem browsing
                     if requested_path_param.startswith('/'):
@@ -749,7 +752,11 @@ class ModelManagerHandler(SimpleHTTPRequestHandler):
                     self.send_error(500, f"Server error: {str(e)}")
                     return
                     
-                self._send_json_response(browse_results)
+                # Return consistent format with current_path and items
+                self._send_json_response({
+                    "current_path": current_browse_abs_path,
+                    "items": browse_results
+                })
                 return
             
             else:
