@@ -11,7 +11,8 @@ This model manager can link them in any combination. Run this tool to do the con
 ## Safetensor inspector
 Need help understanding the .safetensor files?
 All those downloaded .safesonsor files. Do you need help sorting them? Is it a SD1.5 checkpoint? Or was it a FLUX LORA? Maybe it was a contolnet!
-Use the **safeTensor inspector**.
+Use the **safeTensor inspector** to find out. Basic type and architecture is always shown if found. Base model, architecture, steps, precision (bf16, bf8, ...) is always shows. 
+Author, number of steps trained and lots of other data can be found in the headers and keys. 
 
 ![Model Manager Overview](assets/screenshots/Overview_ModelManager_Tab.png)
 
