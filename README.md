@@ -1,37 +1,58 @@
-# ComfyUI Model Manager & SafeTensor Inspector 🎨🔍
+# ComfyUI Model Manager
 
-A comprehensive web-based tool that combines **model ecosystem management** with **deep SafeTensor analysis**. Eliminate model file duplication across multiple ComfyUI installations while providing powerful model inspection capabilities.
+A simple tool that combines **model repos/comfyUI installs** with **safeTensor analysis**. 
+
+If you want to have AI-models (checkpoints/LORAs/controlnets/embeddings/safetensor/pickletensor/...) in one place and use in several ComfyUI-installations. Use this tool.
+If you have several disks with models and want to have all in the same place but not have the hard drive space free? Use this tool.
+Collections of model are called a resource repos. 
+
+This tool is a system for doing this with ease. The technical solution is just symbolink links, shortcuts.
+
+This tools also makes you create resorce repos for different architectures.
+FLUX,SDXL,sd1.5...
+
+Install the app, run it, do you config and file sorting/ispections.
 
 ![Model Manager Overview](assets/screenshots/Overview_ModelManager_Tab.png)
 
-## ✨ Key Features
+## Key Features
 
-### 🗂️ **Model Manager**
 - **Repository Management**: Organize models in centralized repositories
-- **Installation Tracking**: Manage multiple ComfyUI installations  
-- **Smart Linking**: Automatic symbolic link creation and management
-- **Path Validation**: Real-time path existence checking
-- **Change Detection**: Monitor repository changes and file counts
-
-### 🔍 **SafeTensor Inspector** (Integrated)
 - **Metadata Analysis**: Extract comprehensive SafeTensor file information
 - **Quick Access**: Navigate instantly to any repository or installation
-- **Batch Processing**: Analyze multiple files simultaneously
 - **Detailed Inspection**: View tensor keys, headers, and model parameters
-- **Path Browsing**: Built-in file system navigation
 
-### 🔗 **Unified Experience**
-- **Single Interface**: Access both tools from one modern web UI
-- **Seamless Navigation**: Click from management to inspection instantly
-- **System Actions**: Quick access to all management functions
-- **Visual Design**: Professional dark theme with intuitive layout
+## Storage Architecture / Folder structure
 
-## 🏗️ Architecture
+First,  sort your models into the usual model structure in Comfy.
+Then use this tool. 
+After you have used the tool to create the links 
 
 ### Repository Structure
-Your centralized model storage locations:
+
+You can organize your model repositories in different ways depending on your needs:
+
+#### Option 1: By Model Architecture
+Create separate repositories for different model architectures. This keeps models organized by compatibility and makes it easy to link only relevant models to specific ComfyUI installations.
+
 ```
-/mnt/storage/ai/models/
+/mnt/storage/ai/models-flux/
+├── checkpoints/
+├── loras/
+├── embeddings/
+├── controlnets/
+├── vae/
+└── upscale_models/
+
+/mnt/storage/ai/models-sdxl/
+├── checkpoints/
+├── loras/
+├── embeddings/
+├── controlnets/
+├── vae/
+└── upscale_models/
+
+/mnt/storage/ai/models-sd15/
 ├── checkpoints/
 ├── loras/
 ├── embeddings/
@@ -40,8 +61,53 @@ Your centralized model storage locations:
 └── upscale_models/
 ```
 
+#### Option 2: By Content Style/Purpose
+Organize repositories by the type of content or artistic style. This approach is useful when you have specialized workflows or want to keep certain model collections separate.
+
+```
+/mnt/storage/ai/models-cartoons/
+├── checkpoints/
+├── loras/
+├── embeddings/
+├── controlnets/
+├── vae/
+└── upscale_models/
+
+/mnt/storage/ai/models-photos/
+├── checkpoints/
+├── loras/
+├── embeddings/
+├── controlnets/
+├── vae/
+└── upscale_models/
+
+/mnt/storage/ai/models-paintings/
+├── checkpoints/
+├── loras/
+├── embeddings/
+├── controlnets/
+├── vae/
+└── upscale_models/
+```
+
+#### Option 3: Mixed Approach
+If you are really nerdy, combine both approaches - organize by architecture first, then by content within each architecture:
+
+```
+/mnt/storage/ai/flux-models/
+├── realistic/
+│   ├── checkpoints/
+│   └── loras/
+├── anime/
+│   ├── checkpoints/
+│   └── loras/
+└── artistic/
+    ├── checkpoints/
+    └── loras/
+```
+
 ### ComfyUI Installation Structure  
-Your ComfyUI installations (tool manages the models subfolder):
+This is the standard, ComfyUI installation structure. The tool manages the models subfolders:
 ```
 /home/user/ComfyUI/
 ├── models/          ← Tool creates symbolic links here
@@ -53,7 +119,7 @@ Your ComfyUI installations (tool manages the models subfolder):
 └── main.py
 ```
 
-## 🚀 Quick Start
+## Setup / Installation
 
 ### Linux/macOS Setup
 ```bash
@@ -87,7 +153,7 @@ Then edit `model_manager_config.json` with your actual paths.
 ### Access Application
 Navigate to: **http://localhost:8002**
 
-## 📖 Getting Started - 3 Simple Steps
+## Getting Started - 3 Simple Steps
 
 ### Step 1: Add Your Model Repositories 📚
 Set up your central model storage locations - where your actual files live.
@@ -117,7 +183,9 @@ Connect repositories to installations to create symbolic links.
 - Automatic symbolic link creation
 - Status monitoring and health checks
 
-## 🔍 SafeTensor Inspector
+## SafeTensor Inspector
+
+This is where the project started, it was just downhill from there. 
 
 ### Quick Access Shortcuts
 ![Quick Access](assets/screenshots/Closeup_Safetensor_QuickAccess.png)
@@ -131,163 +199,22 @@ Extract comprehensive information from SafeTensor files:
 - **Key Parameters**: Base model, steps, precision
 - **Full Headers**: Complete metadata inspection  
 - **Tensor Keys**: Detailed tensor structure
-- **Batch Analysis**: Process multiple files at once
 
-## ⚙️ Configuration
+## Benefits
 
-The application stores configuration in `model_manager_config.json`:
-
-```json
-{
-  "repositories": [
-    {
-      "id": 1,
-      "name": "Main Models",
-      "path": "/mnt/storage/ai/models",
-      "description": "Primary model collection",
-      "exists": true
-    }
-  ],
-  "comfyui_installations": [
-    {
-      "id": 1, 
-      "name": "ComfyUI Main",
-      "path": "/home/user/ComfyUI",
-      "description": "Main installation",
-      "exists": true
-    }
-  ],
-  "links": {
-    "1": [1]
-  }
-}
-```
-
-## 🔧 System Actions
-
-Available from the top navigation bar:
-
-- **Check Repository Changes**: Scan for new/modified files
-- **Update Link Status**: Refresh all symbolic link health
-- **Export Config**: Backup your configuration
-
-## 🌟 Benefits
-
-### ✅ **Eliminate Duplication**
+### **Eliminate Duplication**
 - Store models once, access from multiple ComfyUI installations
 - Save disk space and reduce sync overhead
-- Centralized model management
 
-### 🔗 **Smart Linking** 
+### **Smart Linking** 
 - Automatic symbolic link creation and management
-- Real-time status monitoring
-- Easy recreation if links break
+- Easy recreation if links breaks, for example after reboots
 
-### 📊 **Comprehensive Analysis**
+### **Comprehensive Analysis**
 - Deep SafeTensor metadata inspection
 - Quick navigation between management and analysis
-- Batch processing capabilities
 
-### 🗂️ **Easy Organization**
+### **Easy Organization**
 - Visual interface for all operations
-- Path validation and existence checking
-- Change detection and monitoring
 
-## 🛠️ Technical Details
-
-### Built With
-- **Backend**: Python HTTP server with REST API
-- **Frontend**: Modern HTML/CSS/JavaScript
-- **Storage**: JSON-based configuration
-- **Security**: Filesystem access restrictions
-
-### Ports
-- **Model Manager**: http://localhost:8002
-- **Integrated SafeTensor Inspector**: Same interface
-
-### API Endpoints
-- Repository CRUD: `/api/repositories`
-- Installation CRUD: `/api/installations` 
-- Link Management: `/api/link`, `/api/unlink`
-- File System: `/api/browse`, `/api/analyze_file`
-- Utilities: `/api/check_path`, `/api/update_link_status`
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**"Path does not exist"**
-- Verify path is typed correctly
-- Check if directory is mounted
-- Ensure read permissions
-
-**"Port already in use"**
-- Application uses port 8002
-- Stop other services on this port
-- Or modify the port in `start_model_manager.sh`
-
-**"Virtual environment not found"**
-- Run `./setup.sh` first
-- Ensure you're in the project directory
-
-**"Cannot create symbolic links"**
-- **Linux/macOS**: Check filesystem permissions and user privileges
-- **Windows**: Run as Administrator OR enable Developer Mode:
-  - Settings → Update & Security → For developers → Developer Mode: ON
-  - Or right-click batch files and "Run as administrator"
-- Ensure target directories exist
-
-## 💡 Best Practices
-
-### Repository Organization
-- Use descriptive names: "SDXL Models", "LoRA Collection"
-- Separate model types if needed
-- Keep consistent path patterns
-
-### Installation Management  
-- Name by purpose: "ComfyUI-Main", "ComfyUI-Testing"
-- Use different installations for stability vs experimentation
-- Document differences in descriptions
-
-### Linking Strategy
-- Link stable repositories to main installations
-- Use experimental repositories only for test setups
-- Multiple repositories per installation for organization
-
-## 🔄 Workflow Example
-
-1. **Setup repositories**: 
-   - "Main Models" → `/mnt/storage/ai/models`
-   - "Experimental" → `/mnt/storage/ai/experimental`
-
-2. **Add installations**:
-   - "ComfyUI Main" → `/home/user/ComfyUI`
-   - "ComfyUI Test" → `/home/user/ComfyUI-test`
-
-3. **Link strategically**:
-   - Main installation ← Main Models repository
-   - Test installation ← Both repositories
-
-4. **Inspect and analyze**:
-   - Use SafeTensor Inspector tab for detailed analysis
-   - Quick Access shortcuts for instant navigation
-   - Batch analyze new model files
-
-This creates a robust, scalable system for managing complex ComfyUI setups! 🎉
-
-## 📝 Requirements
-
-See `requirements.txt`:
-```
-flask
-waitress
-safetensors
-```
-
-## 🤝 Contributing
-
-This tool evolved from a simple SafeTensor Inspector into a comprehensive model management system. Feel free to contribute improvements or extensions!
-
-## 📄 License
-
-Open source - feel free to modify and distribute. 
+Daniel 2025
