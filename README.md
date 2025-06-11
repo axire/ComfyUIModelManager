@@ -1,35 +1,23 @@
 # ComfyUI Model Manager
+A simple tool that combines **model repos**, **comfyUI installs** and **safeTensor inspector**. 
 
-A simple tool that combines **model repos/comfyUI installs** with **safeTensor analysis**. 
+## Model repos and ComfyUI
+This tools makes it handy to manage models of any kind of different architectures. FLUX, SDXL, SD1.5, Stable cascade. 
+With a few clicks you can change comfyUI to only show FLUX or SDXL or SD1.5 or any way of sorting your models. 
+There are folders that holds the models, i.e. **models repos**. 
+There are folders that holds ComfyUI installation, i.e. **ComfyUI Installs**.
+This model manager can link them in any combination. Run this tool to do the config. No need to keep it running. The models will still be available. :)
 
-If you want to have AI-models (checkpoints/LORAs/controlnets/embeddings/safetensor/pickletensor/...) in one place and use in several ComfyUI-installations. Use this tool.
-If you have several disks with models and want to have all in the same place but not have the hard drive space free? Use this tool.
-Collections of model are called a resource repos. 
-
-This tool is a system for doing this with ease. The technical solution is just symbolink links, shortcuts.
-
-This tools also makes you create resorce repos for different architectures.
-FLUX,SDXL,sd1.5...
-
-Install the app, run it, do you config and file sorting/ispections.
+## Safetensot inspector
+Need help understanding the .safetensor files?
+All those downloaded .safesonsor files. Do you need help sorting them? Is it a SD1.5 checkpoint? Or was it a FLUX LORA? Maybe it was a contolnet!
+Use the **safeTensor inspector**.
 
 ![Model Manager Overview](assets/screenshots/Overview_ModelManager_Tab.png)
 
-## Key Features
-
-- **Repository Management**: Organize models in centralized repositories
-- **Metadata Analysis**: Extract comprehensive SafeTensor file information
-- **Quick Access**: Navigate instantly to any repository or installation
-- **Detailed Inspection**: View tensor keys, headers, and model parameters
-
 ## Storage Architecture / Folder structure
 
-First,  sort your models into the usual model structure in Comfy.
-Then use this tool. 
-After you have used the tool to create the links 
-
 ### Repository Structure
-
 You can organize your model repositories in different ways depending on your needs:
 
 #### Option 1: By Model Architecture
