@@ -9,7 +9,7 @@ There are folders that holds ComfyUI installation, i.e. **ComfyUI Installs**.
 This model manager can link them in any combination. Run this tool to do the config. No need to keep it running. The models will still be available. :)
 
 ## Safetensor inspector
-Need help understanding the .safetensor files?
+Need help understanding all those .safetensor in /download that you downloaded bcoz there was a picture mas with this checkpoint/lora/whatever files?
 All those downloaded .safesonsor files. Do you need help sorting them? Is it a SD1.5 checkpoint? Or was it a FLUX LORA? Maybe it was a contolnet!
 Use the **safeTensor inspector** to find out. Basic type and architecture is always shown if found. Base model, architecture, steps, precision (bf16, bf8, ...) is always shows. 
 Author, number of steps trained and lots of other data can be found in the headers and keys. 

@@ -826,6 +826,342 @@
         .tab-system-actions button:not(.success):hover {
             background: #4a8bc2;
         }
+
+        /* Merge Lab Styles */
+        .merge-workflow {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .merge-step {
+            background: #2a2a2a;
+            border: 1px solid #4a4a4a;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            padding: 20px;
+        }
+
+        .merge-step h2 {
+            color: #569cd6;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .merge-section {
+            background: #1a1a1a;
+            border-radius: 6px;
+            padding: 15px;
+        }
+
+        /* Model Grid */
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .model-card {
+            background: #2a2a2a;
+            border: 2px solid #4a4a4a;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .model-card:hover {
+            border-color: #569cd6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .model-card.selected {
+            border-color: #4caf50;
+            background: #1a2a1a;
+        }
+
+        .model-card h4 {
+            color: #d4d4d4;
+            margin: 0 0 8px 0;
+            font-size: 16px;
+        }
+
+        .model-card .model-path {
+            color: #9cdcfe;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .model-card .model-meta {
+            color: #b0b0b0;
+            font-size: 11px;
+        }
+
+        /* Reagent Slots */
+        .reagent-slots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .reagent-slot {
+            flex: 1;
+            max-width: 350px;
+            background: #2a2a2a;
+            border: 2px dashed #4a4a4a;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .reagent-slot.has-model {
+            border-color: #4caf50;
+            border-style: solid;
+            background: #1a2a1a;
+        }
+
+        .reagent-slot h3 {
+            color: #9cdcfe;
+            margin: 0 0 15px 0;
+            font-size: 16px;
+        }
+
+        .reagent-placeholder {
+            color: #888;
+            font-style: italic;
+            padding: 30px 10px;
+            border-radius: 8px;
+            background: #1a1a1a;
+        }
+
+        .reagent-info {
+            text-align: left;
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .reagent-info h4 {
+            color: #d4d4d4;
+            margin: 0 0 8px 0;
+        }
+
+        .reagent-info .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        .reagent-info .info-label {
+            color: #9cdcfe;
+        }
+
+        .reagent-info .info-value {
+            color: #d4d4d4;
+        }
+
+        .merge-operator {
+            font-size: 24px;
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        /* Fusion Controls */
+        .fusion-controls {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-group label {
+            color: #9cdcfe;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .ratio-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ratio-control input[type="range"] {
+            flex: 1;
+            height: 6px;
+            background: #4a4a4a;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .ratio-control input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #569cd6;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .ratio-display {
+            text-align: center;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .control-group select {
+            padding: 8px;
+            border: 1px solid #4a4a4a;
+            background: #2a2a2a;
+            color: #d4d4d4;
+            border-radius: 4px;
+        }
+
+        /* Fusion Preview & Actions */
+        .fusion-preview {
+            margin-bottom: 20px;
+        }
+
+        .merge-preview-box {
+            background: #2a2a2a;
+            border: 1px solid #4a4a4a;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .merge-preview-box h3 {
+            color: #569cd6;
+            margin: 0 0 15px 0;
+        }
+
+        .fusion-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .fusion-btn {
+            background: linear-gradient(45deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .fusion-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .fusion-btn:disabled {
+            background: #4a4a4a;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            background: #569cd6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .secondary-btn:hover:not(:disabled) {
+            background: #4a8bc2;
+        }
+
+        .secondary-btn:disabled {
+            background: #4a4a4a;
+            cursor: not-allowed;
+        }
+
+        /* Progress Bar */
+        .merge-progress {
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #4a4a4a;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #45a049);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #9cdcfe;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* Merge History */
+        .merge-history {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .history-item {
+            background: #2a2a2a;
+            border: 1px solid #4a4a4a;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .history-item h4 {
+            color: #d4d4d4;
+            margin: 0 0 10px 0;
+        }
+
+        .history-item .history-meta {
+            color: #b0b0b0;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .history-item .history-recipe {
+            background: #1a1a1a;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 11px;
+            color: #9cdcfe;
+        }
+
+        .loading-placeholder, .history-placeholder {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            padding: 40px 20px;
+        }
     </style>
 </head>
 <body>
@@ -835,6 +1171,7 @@
             <div class="tab-navigation">
                 <div class="tab active" onclick="switchTab('manager')">Model Manager</div>
                 <div class="tab" onclick="switchTab('inspector')">SafeTensor Inspector</div>
+                <div class="tab" onclick="switchTab('merge-lab')">🧪 Merge Lab</div>
                 <div class="tab" onclick="switchTab('instructions')">Instructions</div>
             </div>
             <div class="tab-system-actions">
@@ -934,6 +1271,121 @@
                 </thead>
                 <tbody></tbody>
             </table>
+        </div>
+        
+        <!-- Merge Lab Tab -->
+        <div id="merge-lab-tab" class="tab-content">
+            <h1>🧪 Model Merge Laboratory</h1>
+            <p style="color: #b0b0b0; font-style: italic; margin-bottom: 30px;">
+                Experimental model fusion workspace - Combine models to create new AI personalities and capabilities
+            </p>
+            
+            <!-- Merge Process Steps -->
+            <div class="merge-workflow">
+                <!-- Step 1: Model Discovery -->
+                <div class="merge-step">
+                    <h2>🔍 Step 1: Discover Compatible Models</h2>
+                    <div class="merge-section">
+                        <button id="scanModelsBtn" class="success">Scan All Repositories for Mergeable Models</button>
+                        <div id="compatibleModels" class="model-grid">
+                            <div class="loading-placeholder">Click "Scan" to discover compatible models...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Select Reagents -->
+                <div class="merge-step">
+                    <h2>⚗️ Step 2: Select Reagents (Models to Merge)</h2>
+                    <div class="merge-section">
+                        <div class="reagent-slots">
+                            <div class="reagent-slot" id="reagent-a">
+                                <h3>🧪 Reagent A (Base Model)</h3>
+                                <div class="reagent-placeholder">Drop a model here or click to select</div>
+                                <div class="reagent-info" style="display: none;"></div>
+                            </div>
+                            <div class="merge-operator">➕</div>
+                            <div class="reagent-slot" id="reagent-b">
+                                <h3>🧪 Reagent B (Merge Model)</h3>
+                                <div class="reagent-placeholder">Drop a model here or click to select</div>
+                                <div class="reagent-info" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Configure Fusion -->
+                <div class="merge-step">
+                    <h2>🎚️ Step 3: Configure Fusion Parameters</h2>
+                    <div class="merge-section">
+                        <div class="fusion-controls">
+                            <div class="control-group">
+                                <label for="mergeRatio">Merge Ratio (A ← → B):</label>
+                                <div class="ratio-control">
+                                    <span>100% A</span>
+                                    <input type="range" id="mergeRatio" min="0" max="100" value="50" 
+                                           oninput="updateRatioDisplay(this.value)">
+                                    <span>100% B</span>
+                                </div>
+                                <div id="ratioDisplay" class="ratio-display">50% A + 50% B</div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="mergeMethod">Fusion Method:</label>
+                                <select id="mergeMethod">
+                                    <option value="weighted">Weighted Average (Safe)</option>
+                                    <option value="additive">Additive Merge (Experimental)</option>
+                                    <option value="slerp">Spherical Linear Interpolation (Advanced)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="outputName">Result Name:</label>
+                                <input type="text" id="outputName" placeholder="my-merged-model" 
+                                       style="width: 300px; padding: 8px; border: 1px solid #4a4a4a; background: #2a2a2a; color: #d4d4d4; border-radius: 4px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Catalyst (Execute) -->
+                <div class="merge-step">
+                    <h2>⚡ Step 4: Catalyst - Execute Fusion</h2>
+                    <div class="merge-section">
+                        <div class="fusion-preview">
+                            <div id="mergePreview" class="merge-preview-box">
+                                <h3>🔮 Fusion Preview</h3>
+                                <div id="previewContent">Select two models and configure parameters to see preview</div>
+                            </div>
+                        </div>
+                        
+                        <div class="fusion-actions">
+                            <button id="executeMergeBtn" class="fusion-btn" disabled>
+                                🧪 Execute Fusion
+                            </button>
+                            <button id="saveMergeConfigBtn" class="secondary-btn" disabled>
+                                💾 Save Merge Recipe
+                            </button>
+                        </div>
+                        
+                        <div id="mergeProgress" class="merge-progress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="progress-text">Fusing models...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Merge History -->
+            <div class="merge-step">
+                <h2>📜 Fusion History & Recipes</h2>
+                <div class="merge-section">
+                    <div id="mergeHistory" class="merge-history">
+                        <div class="history-placeholder">No fusion experiments yet - create your first merge above!</div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- Instructions Tab -->
@@ -1573,6 +2025,11 @@ ComfyUI2: /user/ComfyUI2/models/model.safetensors → <span style="color: #4caf5
             // Update shortcuts when switching to inspector
             if (tabName === 'inspector') {
                 updateInspectorShortcuts();
+            }
+            
+            // Initialize merge lab when switching to it
+            if (tabName === 'merge-lab') {
+                initializeMergeLab();
             }
         }
 
@@ -2792,6 +3249,383 @@ ComfyUI2: /user/ComfyUI2/models/model.safetensors → <span style="color: #4caf5
             } catch (error) {
                 console.error('Error updating browser shortcuts:', error);
             }
+        }
+
+        // ===== MERGE LAB FUNCTIONALITY =====
+        
+        let mergeLabData = {
+            compatibleModels: [],
+            selectedReagentA: null,
+            selectedReagentB: null,
+            mergeHistory: []
+        };
+
+        function initializeMergeLab() {
+            console.log('Initializing Merge Lab...');
+            
+            // Set up event listeners
+            document.getElementById('scanModelsBtn').onclick = scanForMergeableModels;
+            document.getElementById('executeMergeBtn').onclick = executeMerge;
+            document.getElementById('saveMergeConfigBtn').onclick = saveMergeConfig;
+            
+            // Load merge history from localStorage
+            loadMergeHistory();
+        }
+
+        async function scanForMergeableModels() {
+            const scanBtn = document.getElementById('scanModelsBtn');
+            const modelGrid = document.getElementById('compatibleModels');
+            
+            scanBtn.disabled = true;
+            scanBtn.textContent = '🔍 Scanning...';
+            modelGrid.innerHTML = '<div class="loading-placeholder">Scanning repositories for compatible models...</div>';
+            
+            try {
+                // Get all repositories
+                const repositories = await apiCall('/api/repositories');
+                const allModels = [];
+                
+                // Scan each repository for .safetensors files
+                for (const repo of repositories) {
+                    if (repo.exists) {
+                        try {
+                            const response = await fetch(`/api/browse?mode=filesystem&path=${encodeURIComponent(repo.path)}`);
+                            const data = await response.json();
+                            
+                            if (data.items) {
+                                // Recursively scan for .safetensors files
+                                await scanDirectoryForModels(repo.path, data.items, allModels, repo.name);
+                            }
+                        } catch (error) {
+                            console.error(`Error scanning repository ${repo.name}:`, error);
+                        }
+                    }
+                }
+                
+                // Filter and analyze models for compatibility
+                mergeLabData.compatibleModels = await analyzeModelCompatibility(allModels);
+                renderCompatibleModels();
+                
+            } catch (error) {
+                console.error('Error scanning for models:', error);
+                modelGrid.innerHTML = '<div class="loading-placeholder" style="color: #f44336;">Error scanning models. Check console for details.</div>';
+            } finally {
+                scanBtn.disabled = false;
+                scanBtn.textContent = '🔍 Scan All Repositories for Mergeable Models';
+            }
+        }
+
+        async function scanDirectoryForModels(basePath, items, allModels, repoName) {
+            for (const item of items) {
+                if (item.type === 'file' && item.name.toLowerCase().endsWith('.safetensors')) {
+                    // Extract basic info from the file
+                    const modelInfo = {
+                        name: item.name,
+                        path: item.path,
+                        size_mb: item.size_mb || 0,
+                        modified: item.modified,
+                        repository: repoName,
+                        model_type: item.model_type || 'Unknown',
+                        header_metadata: item.header_metadata || {},
+                        tensor_keys: item.tensor_keys || []
+                    };
+                    allModels.push(modelInfo);
+                } else if (item.type === 'directory') {
+                    // Recursively scan subdirectories (limit depth to avoid infinite loops)
+                    try {
+                        const response = await fetch(`/api/browse?mode=filesystem&path=${encodeURIComponent(item.path)}`);
+                        const subData = await response.json();
+                        if (subData.items) {
+                            await scanDirectoryForModels(item.path, subData.items, allModels, repoName);
+                        }
+                    } catch (error) {
+                        console.error(`Error scanning subdirectory ${item.path}:`, error);
+                    }
+                }
+            }
+        }
+
+        async function analyzeModelCompatibility(models) {
+            // Group models by potential compatibility
+            const compatibleGroups = {};
+            
+            for (const model of models) {
+                // Create a compatibility key based on model characteristics
+                const compatKey = generateCompatibilityKey(model);
+                
+                if (!compatibleGroups[compatKey]) {
+                    compatibleGroups[compatKey] = [];
+                }
+                compatibleGroups[compatKey].push(model);
+            }
+            
+            // Return models that have at least one potential merge partner
+            const compatibleModels = [];
+            for (const [key, group] of Object.entries(compatibleGroups)) {
+                if (group.length >= 2) {
+                    compatibleModels.push(...group);
+                }
+            }
+            
+            return compatibleModels;
+        }
+
+        function generateCompatibilityKey(model) {
+            // Simple compatibility heuristic based on model type and size
+            const sizeCategory = model.size_mb < 1000 ? 'small' : 
+                                model.size_mb < 4000 ? 'medium' : 'large';
+            const typeCategory = model.model_type || 'unknown';
+            
+            return `${typeCategory}-${sizeCategory}`;
+        }
+
+        function renderCompatibleModels() {
+            const modelGrid = document.getElementById('compatibleModels');
+            
+            if (mergeLabData.compatibleModels.length === 0) {
+                modelGrid.innerHTML = '<div class="loading-placeholder">No compatible models found. Make sure you have .safetensors files in your repositories.</div>';
+                return;
+            }
+            
+            const html = mergeLabData.compatibleModels.map(model => `
+                <div class="model-card" onclick="selectModel('${model.path}')" data-model-path="${model.path}">
+                    <h4>${model.name}</h4>
+                    <div class="model-path">${model.repository} • ${model.path}</div>
+                    <div class="model-meta">
+                        Type: ${model.model_type} • Size: ${model.size_mb.toFixed(1)} MB
+                    </div>
+                </div>
+            `).join('');
+            
+            modelGrid.innerHTML = html;
+        }
+
+        function selectModel(modelPath) {
+            const model = mergeLabData.compatibleModels.find(m => m.path === modelPath);
+            if (!model) return;
+            
+            // Determine which reagent slot to fill
+            if (!mergeLabData.selectedReagentA) {
+                setReagent('A', model);
+            } else if (!mergeLabData.selectedReagentB) {
+                setReagent('B', model);
+            } else {
+                // Both slots filled, replace A
+                setReagent('A', model);
+            }
+            
+            updateModelCardSelection();
+            updateFusionPreview();
+        }
+
+        function setReagent(slot, model) {
+            const reagentSlot = document.getElementById(`reagent-${slot.toLowerCase()}`);
+            const placeholder = reagentSlot.querySelector('.reagent-placeholder');
+            const info = reagentSlot.querySelector('.reagent-info');
+            
+            if (slot === 'A') {
+                mergeLabData.selectedReagentA = model;
+            } else {
+                mergeLabData.selectedReagentB = model;
+            }
+            
+            // Update UI
+            placeholder.style.display = 'none';
+            info.style.display = 'block';
+            reagentSlot.classList.add('has-model');
+            
+            info.innerHTML = `
+                <h4>${model.name}</h4>
+                <div class="info-row">
+                    <span class="info-label">Repository:</span>
+                    <span class="info-value">${model.repository}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Type:</span>
+                    <span class="info-value">${model.model_type}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Size:</span>
+                    <span class="info-value">${model.size_mb.toFixed(1)} MB</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Modified:</span>
+                    <span class="info-value">${new Date(model.modified).toLocaleDateString()}</span>
+                </div>
+            `;
+        }
+
+        function updateModelCardSelection() {
+            // Clear all selections
+            document.querySelectorAll('.model-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Highlight selected models
+            if (mergeLabData.selectedReagentA) {
+                const cardA = document.querySelector(`[data-model-path="${mergeLabData.selectedReagentA.path}"]`);
+                if (cardA) cardA.classList.add('selected');
+            }
+            if (mergeLabData.selectedReagentB) {
+                const cardB = document.querySelector(`[data-model-path="${mergeLabData.selectedReagentB.path}"]`);
+                if (cardB) cardB.classList.add('selected');
+            }
+        }
+
+        function updateRatioDisplay(value) {
+            const ratioA = 100 - value;
+            const ratioB = value;
+            document.getElementById('ratioDisplay').textContent = `${ratioA}% A + ${ratioB}% B`;
+            updateFusionPreview();
+        }
+
+        function updateFusionPreview() {
+            const previewContent = document.getElementById('previewContent');
+            const executeBtn = document.getElementById('executeMergeBtn');
+            const saveConfigBtn = document.getElementById('saveMergeConfigBtn');
+            
+            if (!mergeLabData.selectedReagentA || !mergeLabData.selectedReagentB) {
+                previewContent.innerHTML = 'Select two models and configure parameters to see preview';
+                executeBtn.disabled = true;
+                saveConfigBtn.disabled = true;
+                return;
+            }
+            
+            const ratio = document.getElementById('mergeRatio').value;
+            const method = document.getElementById('mergeMethod').value;
+            const outputName = document.getElementById('outputName').value || 'merged-model';
+            
+            const ratioA = 100 - ratio;
+            const ratioB = ratio;
+            
+            previewContent.innerHTML = `
+                <div style="text-align: left;">
+                    <h4 style="color: #4caf50; margin-bottom: 15px;">🧪 Fusion Recipe</h4>
+                    <div style="margin-bottom: 10px;"><strong>Base Model (${ratioA}%):</strong> ${mergeLabData.selectedReagentA.name}</div>
+                    <div style="margin-bottom: 10px;"><strong>Merge Model (${ratioB}%):</strong> ${mergeLabData.selectedReagentB.name}</div>
+                    <div style="margin-bottom: 10px;"><strong>Method:</strong> ${method}</div>
+                    <div style="margin-bottom: 10px;"><strong>Output:</strong> ${outputName}.safetensors</div>
+                    <div style="margin-top: 15px; padding: 10px; background: #1a1a1a; border-radius: 4px; font-size: 12px; color: #9cdcfe;">
+                        This will create a new model combining the characteristics of both selected models using ${method} fusion.
+                    </div>
+                </div>
+            `;
+            
+            executeBtn.disabled = false;
+            saveConfigBtn.disabled = false;
+        }
+
+        function executeMerge() {
+            // For now, show a placeholder implementation
+            const progressDiv = document.getElementById('mergeProgress');
+            const progressFill = progressDiv.querySelector('.progress-fill');
+            const progressText = progressDiv.querySelector('.progress-text');
+            
+            progressDiv.style.display = 'block';
+            progressText.textContent = 'Initializing fusion process...';
+            
+            // Simulate progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+                
+                progressFill.style.width = progress + '%';
+                
+                if (progress < 30) {
+                    progressText.textContent = 'Loading model weights...';
+                } else if (progress < 60) {
+                    progressText.textContent = 'Performing tensor fusion...';
+                } else if (progress < 90) {
+                    progressText.textContent = 'Optimizing merged model...';
+                } else if (progress < 100) {
+                    progressText.textContent = 'Saving result...';
+                } else {
+                    progressText.textContent = '✅ Fusion complete! (Placeholder - actual merging not yet implemented)';
+                    clearInterval(interval);
+                    
+                    // Add to history
+                    addToMergeHistory();
+                    
+                    setTimeout(() => {
+                        progressDiv.style.display = 'none';
+                        progressFill.style.width = '0%';
+                    }, 3000);
+                }
+            }, 200);
+        }
+
+        function saveMergeConfig() {
+            const config = {
+                reagentA: mergeLabData.selectedReagentA,
+                reagentB: mergeLabData.selectedReagentB,
+                ratio: document.getElementById('mergeRatio').value,
+                method: document.getElementById('mergeMethod').value,
+                outputName: document.getElementById('outputName').value || 'merged-model',
+                timestamp: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `merge-recipe-${config.outputName}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showStatus('Merge recipe saved successfully!', 'success');
+        }
+
+        function addToMergeHistory() {
+            const historyItem = {
+                id: Date.now(),
+                reagentA: mergeLabData.selectedReagentA.name,
+                reagentB: mergeLabData.selectedReagentB.name,
+                ratio: document.getElementById('mergeRatio').value,
+                method: document.getElementById('mergeMethod').value,
+                outputName: document.getElementById('outputName').value || 'merged-model',
+                timestamp: new Date().toISOString(),
+                status: 'completed'
+            };
+            
+            mergeLabData.mergeHistory.unshift(historyItem);
+            saveMergeHistory();
+            renderMergeHistory();
+        }
+
+        function loadMergeHistory() {
+            const saved = localStorage.getItem('mergeLabHistory');
+            if (saved) {
+                mergeLabData.mergeHistory = JSON.parse(saved);
+                renderMergeHistory();
+            }
+        }
+
+        function saveMergeHistory() {
+            localStorage.setItem('mergeLabHistory', JSON.stringify(mergeLabData.mergeHistory));
+        }
+
+        function renderMergeHistory() {
+            const historyDiv = document.getElementById('mergeHistory');
+            
+            if (mergeLabData.mergeHistory.length === 0) {
+                historyDiv.innerHTML = '<div class="history-placeholder">No fusion experiments yet - create your first merge above!</div>';
+                return;
+            }
+            
+            const html = mergeLabData.mergeHistory.map(item => `
+                <div class="history-item">
+                    <h4>${item.outputName}</h4>
+                    <div class="history-meta">
+                        ${new Date(item.timestamp).toLocaleString()} • Status: ${item.status}
+                    </div>
+                    <div class="history-recipe">
+                        ${item.reagentA} (${100-item.ratio}%) + ${item.reagentB} (${item.ratio}%) • ${item.method}
+                    </div>
+                </div>
+            `).join('');
+            
+            historyDiv.innerHTML = html;
         }
     </script>
 </body>
