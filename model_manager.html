@@ -2526,10 +2526,17 @@ ComfyUI2: /user/ComfyUI2/models/model.safetensors → <span style="color: #4caf5
                             folderStats += `<div class="folder-stat ${hasFiles ? 'has-files' : ''}">${folder.name}: ${folder.file_count}</div>`;
                         });
                         
-                        // Show custom folders with different styling
+                        // Show custom folders with different styling and click handler
                         customFolders.forEach(folder => {
                             const hasFiles = folder.file_count > 0;
-                            folderStats += `<div class="folder-stat ${hasFiles ? 'has-files' : ''}" style="background: #4a4a2a; border-left: 3px solid #d7ba7d; color: white;">${folder.name}: ${folder.file_count}</div>`;
+                            const isEnabled = folder.enabled || false;
+                            const bgColor = isEnabled ? '#5a6a3a' : '#4a4a2a';
+                            const borderColor = isEnabled ? '#90ee90' : '#d7ba7d';
+                            const checkmark = isEnabled ? ' ✓' : '';
+                            folderStats += `<div class="folder-stat custom-folder ${hasFiles ? 'has-files' : ''}"
+                                style="background: ${bgColor}; border-left: 3px solid ${borderColor}; color: white; cursor: pointer;"
+                                onclick="toggleCustomFolder(${repo.id}, '${folder.name}')"
+                                title="Click to ${isEnabled ? 'disable' : 'enable'} this custom folder">${folder.name}${checkmark}: ${folder.file_count}</div>`;
                         });
                         
                         folderStats += '</div>';
@@ -2948,18 +2955,42 @@ ComfyUI2: /user/ComfyUI2/models/model.safetensors → <span style="color: #4caf5
         async function relinkRepository(installId, repoId) {
             try {
                 showStatus('Recreating links...', 'loading');
+                // First unlink to remove any disabled custom folders
+                await apiCall('/api/perform_unlink', 'POST', { install_id: installId, repo_id: repoId });
+                // Then relink with current enabled folders
                 const result = await apiCall('/api/perform_link', 'POST', { install_id: installId, repo_id: repoId });
-                
+
                 if (result.success) {
                     const counts = Object.values(result.results).reduce((sum, r) => sum + (r.count || 0), 0);
                     showStatus(`Links recreated successfully! ${counts} files linked.`, 'success');
                 } else {
                     showStatus(`Error recreating links: ${result.error}`, 'error');
                 }
-                
+
                 await loadInstallations();
             } catch (error) {
                 showStatus(`Error recreating links: ${error.message}`, 'error');
+            }
+        }
+
+        async function toggleCustomFolder(repoId, folderName) {
+            try {
+                const response = await fetch('/api/toggle_custom_folder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ repo_id: repoId, folder_name: folderName })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    // Refresh the repository list to show updated state
+                    await loadRepositories();
+                    showStatus(result.enabled ? `Enabled custom folder: ${folderName}` : `Disabled custom folder: ${folderName}`, 'success');
+                } else {
+                    showStatus('Failed to toggle custom folder: ' + (result.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Error toggling custom folder:', error);
+                showStatus('Error toggling custom folder', 'error');
             }
         }
 

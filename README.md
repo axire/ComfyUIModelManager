@@ -29,7 +29,7 @@ Create separate repositories for different model architectures. This keeps model
 ├── checkpoints/
 ├── loras/
 ├── embeddings/
-├── controlnets/
+├── controlnet/
 ├── vae/
 └── upscale_models/
 
@@ -37,7 +37,7 @@ Create separate repositories for different model architectures. This keeps model
 ├── checkpoints/
 ├── loras/
 ├── embeddings/
-├── controlnets/
+├── controlnet/
 ├── vae/
 └── upscale_models/
 
@@ -45,7 +45,7 @@ Create separate repositories for different model architectures. This keeps model
 ├── checkpoints/
 ├── loras/
 ├── embeddings/
-├── controlnets/
+├── controlnet/
 ├── vae/
 └── upscale_models/
 ```
@@ -58,7 +58,7 @@ Organize repositories by the type of content or artistic style. This approach is
 ├── checkpoints/
 ├── loras/
 ├── embeddings/
-├── controlnets/
+├── controlnet/
 ├── vae/
 └── upscale_models/
 
@@ -66,7 +66,7 @@ Organize repositories by the type of content or artistic style. This approach is
 ├── checkpoints/
 ├── loras/
 ├── embeddings/
-├── controlnets/
+├── controlnet/
 ├── vae/
 └── upscale_models/
 
@@ -74,7 +74,7 @@ Organize repositories by the type of content or artistic style. This approach is
 ├── checkpoints/
 ├── loras/
 ├── embeddings/
-├── controlnets/
+├── controlnet/
 ├── vae/
 └── upscale_models/
 ```

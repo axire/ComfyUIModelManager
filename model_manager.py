@@ -3,17 +3,47 @@ import json
 import datetime
 import sys
 import subprocess
+import struct
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
 
 # SafeTensor Inspector functionality
-try:
-    from safetensors.torch import safe_open
-    SAFETENSORS_AVAILABLE = True
-except ImportError:
-    SAFETENSORS_AVAILABLE = False
-    print("WARNING: safetensors library not found. Detailed .safetensors analysis will be disabled.")
-    print("Please install it via: pip install safetensors")
+# We use manual header parsing to avoid the heavy torch/numpy dependencies
+SAFETENSORS_AVAILABLE = True
+
+def _read_safetensor_header(file_path):
+    """
+    Read safetensor file header using only Python stdlib (no torch/numpy needed).
+    Returns (metadata_dict, tensor_keys_list) or raises exception on error.
+    """
+    try:
+        with open(file_path, 'rb') as f:
+            # Read first 8 bytes to get header length
+            header_size_bytes = f.read(8)
+            if len(header_size_bytes) < 8:
+                raise ValueError("File too small to be a valid safetensors file")
+
+            # Unpack as little-endian unsigned 64-bit integer
+            header_length = struct.unpack('<Q', header_size_bytes)[0]
+
+            # Read the JSON header
+            header_data = f.read(header_length)
+            if len(header_data) < header_length:
+                raise ValueError("Incomplete header data")
+
+            # Parse JSON header
+            header = json.loads(header_data.decode('utf-8'))
+
+            # Extract metadata (stored in special __metadata__ key)
+            metadata = header.get('__metadata__', {})
+
+            # Extract tensor keys (all keys except __metadata__)
+            tensor_keys = [k for k in header.keys() if k != '__metadata__']
+
+            return metadata, tensor_keys
+
+    except Exception as e:
+        raise Exception(f"Failed to read safetensor header: {str(e)}")
 
 # Configuration file for storing repositories and installations
 CONFIG_FILE = "model_manager_config.json"
@@ -67,7 +97,8 @@ class ModelManagerConfig:
             ],
             "links": {},
             "link_status": {},
-            "folder_snapshots": {}
+            "folder_snapshots": {},
+            "enabled_custom_folders": {}  # repo_id -> [list of enabled custom folder names]
         }
     
     def add_repository(self, name, path, description=""):
@@ -217,7 +248,13 @@ class ModelManagerConfig:
     
     def get_repository_folders(self, repo_path):
         """Get all model folders within a repository, including non-standard ones"""
-        standard_folders = ["checkpoints", "loras", "embeddings", "controlnets", "vae", "upscale_models"]
+        # Official ComfyUI model directories (as of 2024)
+        standard_folders = [
+            "audio_encoders", "checkpoints", "clip", "clip_vision", "configs",
+            "controlnet", "diffusers", "diffusion_models", "embeddings", "gligen",
+            "hypernetworks", "loras", "model_patches", "photomaker", "style_models",
+            "text_encoders", "unet", "upscale_models", "vae", "vae_approx"
+        ]
         all_folders = []
         total_files = 0
         total_size_bytes = 0
@@ -335,36 +372,107 @@ class ModelManagerConfig:
         
         return {"repositories": changes_summary, "total_changes": total_changes}
 
+    def toggle_custom_folder(self, repo_id, folder_name):
+        """Toggle a custom folder for a repository"""
+        if "enabled_custom_folders" not in self.data:
+            self.data["enabled_custom_folders"] = {}
+
+        repo_key = str(repo_id)
+        if repo_key not in self.data["enabled_custom_folders"]:
+            self.data["enabled_custom_folders"][repo_key] = []
+
+        if folder_name in self.data["enabled_custom_folders"][repo_key]:
+            self.data["enabled_custom_folders"][repo_key].remove(folder_name)
+            enabled = False
+        else:
+            self.data["enabled_custom_folders"][repo_key].append(folder_name)
+            enabled = True
+
+        return enabled
+
+    def get_enabled_custom_folders(self, repo_id):
+        """Get list of enabled custom folders for a repository"""
+        if "enabled_custom_folders" not in self.data:
+            self.data["enabled_custom_folders"] = {}
+
+        repo_key = str(repo_id)
+        return self.data["enabled_custom_folders"].get(repo_key, [])
+
 class ModelLinker:
     """Handles the actual symbolic linking between repositories and ComfyUI installations"""
-    
+
     def __init__(self):
-        self.standard_folders = ["checkpoints", "loras", "embeddings", "controlnets", "vae", "upscale_models"]
+        # Official ComfyUI model directories (as of 2024)
+        self.standard_folders = [
+            "audio_encoders",
+            "checkpoints",
+            "clip",
+            "clip_vision",
+            "configs",
+            "controlnet",
+            "diffusers",
+            "diffusion_models",
+            "embeddings",
+            "gligen",
+            "hypernetworks",
+            "loras",
+            "model_patches",
+            "photomaker",
+            "style_models",
+            "text_encoders",
+            "unet",
+            "upscale_models",
+            "vae",
+            "vae_approx"
+        ]
     
-    def link_repository_to_installation(self, repo_path, install_path):
+    def link_repository_to_installation(self, repo_path, install_path, repo_id=None, config=None):
         """Link all model folders from repository to ComfyUI installation"""
         results = {}
         models_path = os.path.join(install_path, "models")
-        
+
         if not os.path.exists(models_path):
             os.makedirs(models_path, exist_ok=True)
-        
+
+        # Get enabled custom folders if config is provided
+        custom_folders = []
+        if config and repo_id:
+            custom_folders = config.get_enabled_custom_folders(repo_id)
+
+        # Link standard folders
         for folder in self.standard_folders:
             src_folder = os.path.join(repo_path, folder)
             dest_folder = os.path.join(models_path, folder)
-            
+
             if os.path.exists(src_folder):
                 results[folder] = self._link_folder(src_folder, dest_folder, folder)
             else:
                 results[folder] = {"success": False, "message": f"Source folder {src_folder} does not exist", "count": 0}
-        
+
+        # Link enabled custom folders
+        for folder in custom_folders:
+            src_folder = os.path.join(repo_path, folder)
+            dest_folder = os.path.join(models_path, folder)
+
+            if os.path.exists(src_folder):
+                results[folder] = self._link_folder(src_folder, dest_folder, folder)
+            else:
+                results[folder] = {"success": False, "message": f"Custom folder {src_folder} does not exist", "count": 0}
+
         return results
     
-    def unlink_repository_from_installation(self, repo_path, install_path):
+    def unlink_repository_from_installation(self, repo_path, install_path, repo_id=None, config=None):
         """Remove symbolic links for a specific repository from ComfyUI installation"""
         results = {}
         models_path = os.path.join(install_path, "models")
-        
+
+        # Get enabled custom folders if config is provided
+        custom_folders = []
+        if config and repo_id:
+            custom_folders = config.get_enabled_custom_folders(repo_id)
+            print(f"DEBUG: Unlinking repo_id={repo_id}, custom_folders={custom_folders}")
+
+        # Unlink standard folders
         for folder in self.standard_folders:
             src_folder = os.path.join(repo_path, folder)
             dest_folder = os.path.join(models_path, folder)
@@ -372,7 +480,16 @@ class ModelLinker:
                 results[folder] = self._unlink_folder_for_repository(src_folder, dest_folder, folder)
             else:
                 results[folder] = {"success": True, "message": f"Folder {dest_folder} does not exist", "count": 0}
-        
+
+        # Unlink enabled custom folders
+        for folder in custom_folders:
+            src_folder = os.path.join(repo_path, folder)
+            dest_folder = os.path.join(models_path, folder)
+            if os.path.exists(dest_folder):
+                results[folder] = self._unlink_folder_for_repository(src_folder, dest_folder, folder)
+            else:
+                results[folder] = {"success": True, "message": f"Custom folder {dest_folder} does not exist", "count": 0}
+
         return results
     
     def _link_folder(self, src, dest, folder_name):
@@ -426,9 +543,10 @@ class ModelLinker:
         try:
             if not os.path.exists(dest_folder):
                 return {"success": True, "message": f"Directory {dest_folder} does not exist", "count": 0}
-            
+
             count = 0
             src_realpath = os.path.realpath(src_folder)
+            print(f"DEBUG: Unlinking {folder_name}: src={src_realpath}, dest={dest_folder}")
             
             # Find and remove symbolic links that point to this specific repository
             for root, dirs, files in os.walk(dest_folder, topdown=False):
@@ -440,6 +558,7 @@ class ModelLinker:
                             link_target = os.path.realpath(file_path)
                             # Check if this link points to our source repository
                             if link_target.startswith(src_realpath):
+                                print(f"DEBUG: Removing symlink {file_path} -> {link_target}")
                                 os.remove(file_path)
                                 count += 1
                         except (OSError, FileNotFoundError):
@@ -461,6 +580,7 @@ class ModelLinker:
                     except OSError:
                         pass  # Directory not empty or other error
             
+            print(f"DEBUG: Finished unlinking {folder_name}: removed {count} links")
             return {"success": True, "message": f"Removed {count} symbolic links for this repository", "count": count}
             
         except Exception as e:
@@ -603,10 +723,8 @@ class ModelManagerHandler(SimpleHTTPRequestHandler):
         if not SAFETENSORS_AVAILABLE:
             return {"error": "safetensors library not installed"}, []
         try:
-            with safe_open(file_abs_path, framework="pt", device="cpu") as f:
-                metadata = f.metadata() if f.metadata() else {}
-                keys = list(f.keys())
-                return metadata, keys
+            metadata, keys = _read_safetensor_header(file_abs_path)
+            return metadata, keys
         except Exception as e:
             print(f"Could not read metadata for {file_abs_path}: {e}")
             return {"error": f"Could not read metadata: {str(e)}"}, []
@@ -641,6 +759,11 @@ class ModelManagerHandler(SimpleHTTPRequestHandler):
                 repo = next((r for r in self.config.data["repositories"] if r["id"] == int(repo_id)), None)
                 if repo:
                     folder_data = self.config.get_repository_folders(repo["path"])
+                    # Add enabled status for custom folders
+                    enabled_custom_folders = self.config.get_enabled_custom_folders(int(repo_id))
+                    for folder in folder_data["folders"]:
+                        if not folder["is_standard"]:
+                            folder["enabled"] = folder["name"] in enabled_custom_folders
                     self._send_json_response(folder_data)
                 else:
                     self.send_error(404, "Repository not found")
@@ -962,8 +1085,8 @@ class ModelManagerHandler(SimpleHTTPRequestHandler):
                 return
             
             # Perform the actual linking
-            results = self.linker.link_repository_to_installation(repo["path"], install["path"])
-            
+            results = self.linker.link_repository_to_installation(repo["path"], install["path"], repo_id, self.config)
+
             # Also update the configuration
             self.config.link_repository_to_installation(install_id, repo_id)
             
@@ -985,8 +1108,8 @@ class ModelManagerHandler(SimpleHTTPRequestHandler):
                 return
             
             # Perform the actual unlinking (remove symlinks for this specific repository)
-            results = self.linker.unlink_repository_from_installation(repo["path"], install["path"])
-            
+            results = self.linker.unlink_repository_from_installation(repo["path"], install["path"], repo_id, self.config)
+
             # Also update the configuration
             self.config.unlink_repository_from_installation(install_id, repo_id)
             
@@ -995,6 +1118,51 @@ class ModelManagerHandler(SimpleHTTPRequestHandler):
             self.config.save_config()
             
             self._send_json_response({"success": True, "results": results})
+        elif parsed_url.path == "/api/toggle_custom_folder":
+            # Toggle a custom folder for a repository
+            repo_id = data.get("repo_id")
+            folder_name = data.get("folder_name")
+
+            if not repo_id or not folder_name:
+                self._send_json_response({"success": False, "error": "Missing repo_id or folder_name"}, 400)
+                return
+
+            # Get OLD state before toggling (needed for unlinking)
+            old_enabled_folders = self.config.get_enabled_custom_folders(repo_id).copy()
+
+            # Toggle the folder (changes the state)
+            enabled = self.config.toggle_custom_folder(repo_id, folder_name)
+
+            # Get NEW state after toggling (needed for linking)
+            new_enabled_folders = self.config.get_enabled_custom_folders(repo_id)
+
+            # Find the repository
+            repo = next((r for r in self.config.data["repositories"] if r["id"] == repo_id), None)
+            if not repo:
+                self._send_json_response({"success": False, "error": "Repository not found"}, 404)
+                return
+
+            # Refresh links for all installations that have this repo linked
+            # This ensures symlinks are in sync with the enabled state
+            for install_key, linked_repos in self.config.data["links"].items():
+                if repo_id in linked_repos:
+                    install_id = int(install_key)
+                    install = next((i for i in self.config.data["comfyui_installations"] if i["id"] == install_id), None)
+                    if install and install["exists"]:
+                        print(f"DEBUG: Toggling {folder_name} (enabled={enabled}) for installation {install_id}")
+                        print(f"DEBUG: Old enabled folders: {old_enabled_folders}")
+                        print(f"DEBUG: New enabled folders: {new_enabled_folders}")
+
+                        # Unlink using OLD state (so disabled folders get removed)
+                        self._unlink_with_custom_folders(repo["path"], install["path"], old_enabled_folders)
+                        # Link using NEW state (so newly enabled folders get added)
+                        self._link_with_custom_folders(repo["path"], install["path"], new_enabled_folders)
+
+            # Update link status
+            self.config.update_all_link_status(self.linker)
+            self.config.save_config()
+
+            self._send_json_response({"success": True, "enabled": enabled, "folder_name": folder_name})
         elif parsed_url.path == "/api/refresh_paths":
             self.config.refresh_all_paths()
             self.config.save_config()
@@ -1072,6 +1240,53 @@ class ModelManagerHandler(SimpleHTTPRequestHandler):
         else:
             self.send_error(404, "Not found")
     
+    def _unlink_with_custom_folders(self, repo_path, install_path, custom_folder_names):
+        """Unlink standard folders + specific custom folders"""
+        results = {}
+        models_path = os.path.join(install_path, "models")
+
+        # Unlink standard folders
+        for folder in self.linker.standard_folders:
+            src_folder = os.path.join(repo_path, folder)
+            dest_folder = os.path.join(models_path, folder)
+            if os.path.exists(dest_folder):
+                results[folder] = self.linker._unlink_folder_for_repository(src_folder, dest_folder, folder)
+
+        # Unlink specified custom folders
+        for folder in custom_folder_names:
+            src_folder = os.path.join(repo_path, folder)
+            dest_folder = os.path.join(models_path, folder)
+            if os.path.exists(dest_folder):
+                print(f"DEBUG: Unlinking custom folder {folder}")
+                results[folder] = self.linker._unlink_folder_for_repository(src_folder, dest_folder, folder)
+
+        return results
+
+    def _link_with_custom_folders(self, repo_path, install_path, custom_folder_names):
+        """Link standard folders + specific custom folders"""
+        results = {}
+        models_path = os.path.join(install_path, "models")
+
+        if not os.path.exists(models_path):
+            os.makedirs(models_path, exist_ok=True)
+
+        # Link standard folders
+        for folder in self.linker.standard_folders:
+            src_folder = os.path.join(repo_path, folder)
+            dest_folder = os.path.join(models_path, folder)
+            if os.path.exists(src_folder):
+                results[folder] = self.linker._link_folder(src_folder, dest_folder, folder)
+
+        # Link specified custom folders
+        for folder in custom_folder_names:
+            src_folder = os.path.join(repo_path, folder)
+            dest_folder = os.path.join(models_path, folder)
+            if os.path.exists(src_folder):
+                print(f"DEBUG: Linking custom folder {folder}")
+                results[folder] = self.linker._link_folder(src_folder, dest_folder, folder)
+
+        return results
+
     def serve_main_interface(self):
         # Serve the actual HTML file
         script_dir = os.path.dirname(os.path.abspath(__file__))

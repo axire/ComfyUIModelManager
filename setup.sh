@@ -9,13 +9,13 @@ BLUE="\033[0;34m"
 RESET="\033[0m"
 
 # Banner with ASCII art and timestamp
-echo -e "${CYAN}--- Running setup script for SafeTensor Inspector @ ${GREEN}$(date)${CYAN}"
+echo -e "${CYAN}--- Running setup script for ComfyUI Model Manager @ ${GREEN}$(date)${CYAN}"
 cat <<'EOF'
-             __     _                        _                      _           
-   ___ __ _ / _|___| |_ ___ _ _  ___ ___ _ _(_)_ _  ____ __  ___ __| |_ ___ _ _ 
- _(_-</ _` |  _/ -_)  _/ -_) ' \(_-</ _ \ '_| | ' \(_-< '_ \/ -_) _|  _/ _ \ '_|
-(_)__/\__,_|_| \___|\__\___|_||_/__/\___/_| |_|_||_/__/ .__/\___\__|\__\___/_|  
-                                                      |_|   -by daniel 2025- 
+  ___|                  _|       |   |_ _|  \  |           |      |  \  |
+ |      _ \  __ `__ \  |   |   | |   |  |  |\/ |  _ \   _` |  _ \ | |\/ |  _` | __ \   _` |  _` |  __|
+ |     (   | |   |   | __| |   | |   |  |  |   | (   | (   |  __/ | |   | (   | |   | (   | (   | |
+\____|\___/ _|  _|  _|_|  \__, |\___/ ___|_|  _|\___/ \__,_|\___|_|_|  _|\__,_|_|  _|\__,_|\__, |_|
+    ComfyUI Model Manager ____/                                                            |___/
 EOF
 
 PYTHON_CMD="python3"
@@ -28,7 +28,7 @@ then
     exit 1
 fi
 
-echo -e "${CYAN}--- SafeTensor Inspector Setup ---${RESET}"
+echo -e "${CYAN}--- ComfyUI Model Manager Setup ---${RESET}"
 
 # Check if virtual environment already exists
 if [ -d "$VENV_DIR" ]; then
@@ -76,11 +76,11 @@ fi
 
 # Make start script executable if it's not already
 echo -e "${BLUE}Making start script executable...${RESET}"
-if [ ! -x "start_safetensor_inspector.sh" ]; then
-    chmod +x "start_safetensor_inspector.sh"
+if [ ! -x "start_model_manager.sh" ]; then
+    chmod +x "start_model_manager.sh"
 fi
 echo -e "${GREEN}✓ Start script is executable.${RESET}"
-echo -e "To run the application: ${YELLOW}./start_safetensor_inspector.sh${RESET}"
+echo -e "To run the application: ${YELLOW}./start_model_manager.sh${RESET}"
 echo -e "${CYAN}--- Setup Complete @ ${GREEN}$(date)${RESET}"
 
     

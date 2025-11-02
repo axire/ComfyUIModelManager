@@ -45,7 +45,7 @@
       "checkpoints": "linked",
       "loras": "linked",
       "embeddings": "linked",
-      "controlnets": "linked",
+      "controlnet": "linked",
       "vae": "linked",
       "upscale_models": "linked"
     },
@@ -54,7 +54,7 @@
       "checkpoints": "linked",
       "loras": "linked",
       "embeddings": "linked",
-      "controlnets": "linked",
+      "controlnet": "linked",
       "vae": "linked",
       "upscale_models": "linked"
     }
@@ -64,7 +64,7 @@
       "checkpoints": 15,
       "loras": 42,
       "embeddings": 8,
-      "controlnets": 6,
+      "controlnet": 6,
       "vae": 3,
       "upscale_models": 4,
       "last_updated": "2025-01-01T12:00:00.000Z"
@@ -73,7 +73,7 @@
       "checkpoints": 5,
       "loras": 12,
       "embeddings": 2,
-      "controlnets": 1,
+      "controlnet": 1,
       "vae": 1,
       "upscale_models": 1,
       "last_updated": "2025-01-01T12:00:00.000Z"
